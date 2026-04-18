@@ -1,12 +1,3 @@
 [gd_scene format=3 uid="uid://cs2mfx2h1hihs"]
 
-[ext_resource type="Script" uid="uid://dxcclmtw16174" path="res://src/Nodes/TickManager.cs" id="1_kb72a"]
-[ext_resource type="Script" uid="uid://cx2o65e54gbrq" path="res://src/Nodes/NetworkManager.cs" id="2_hu1ol"]
-
-[node name="LevelRoot" type="Node2D" unique_id=1632579191]
-
-[node name="TickManager" type="Node" parent="." unique_id=729321106]
-script = ExtResource("1_kb72a")
-
-[node name="NetworkManager" type="Node" parent="." unique_id=334668359]
-script = ExtResource("2_hu1ol")
+[node name="LevelRoot" type="Node" unique_id=1020988791]

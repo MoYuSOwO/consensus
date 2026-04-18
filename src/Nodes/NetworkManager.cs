@@ -1,22 +1,25 @@
+using Consensus.Models;
+using Consensus.Models.Commands;
+using Consensus.Utils;
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Consensus.Models;
+namespace Consensus.Nodes;
 
 public partial class NetworkManager : Node
 {
-    public static NetworkManager? Instance { get; private set; }
-    
     private readonly Dictionary<string, Robot> registry = [];
     public ReadOnlyDictionary<string, Robot> Registry => new(registry);
     
     private readonly List<Command> inFlightPackets = [];
 
+    public bool IsFlightEmpty => inFlightPackets.Count > 0;
+
     public override void _Ready()
     {
-        Instance = this;
     }
 
     public void RegisterRobot(Robot robot)
@@ -26,19 +29,51 @@ public partial class NetworkManager : Node
 
     public void SendPacket(Command packet)
     {
-        if (!registry.TryGetValue(packet.FromRobotId, out Robot? fromNode) || !registry.TryGetValue(packet.ToRobotId, out Robot? toNode)) return;
+        if (!registry.TryGetValue(packet.FromRobotId, out Robot? from))
+        {
+            GD.PrintErr($"[NetworkManager] Robot - {packet.FromRobotId} is not exists.");
+            return;
+        }
+        if (!registry.TryGetValue(packet.ToRobotId, out Robot? to))
+        {
+            GD.PrintErr($"[NetworkManager] Robot - {packet.ToRobotId} is not exists.");
+            return;
+        }
 
         // distance
-        float dist = fromNode.GlobalPosition.DistanceTo(toNode.GlobalPosition);
+        float dist;
         
         // delay
-        int delayTicks = Mathf.CeilToInt(dist / 100.0f);
-        if (delayTicks < 1) delayTicks = 1; 
+        int delayTicks;
+
+        // strength
+        float strength;
+
+        // loss
+        float lossProb;
+
+        if (to == from)
+        {
+            dist = 0;
+            delayTicks = AlgorithmUtil.RandomNetworkDelay.Value;
+            strength = packet.SendStrength;
+            lossProb = 0;
+        }
+        else
+        {
+            dist = from.GlobalPosition.DistanceTo(to.GlobalPosition);
+            delayTicks = AlgorithmUtil.RandomNetworkDelay.Value + AlgorithmUtil.GetRandomRobotDelay(to).Value;
+            strength = AlgorithmUtil.GetDecreaseRatio(dist).Value * packet.SendStrength;
+            lossProb = AlgorithmUtil.GetLossProb(strength).Value;
+        }
 
         packet.CalculatedArrivalTick = packet.SendTick + delayTicks;
+        packet.CalculatedArrivalStrength = strength;
+        packet.CalculatedArrivalLossRatio = lossProb;
+        
         inFlightPackets.Add(packet);
 
-        GD.Print($"[NetworkManager] {packet.FromRobotId} -> {packet.ToRobotId}. distance: {dist}, delay: {delayTicks} Ticks.");
+        GD.Print($"[NetworkManager] {packet.FromRobotId} -> {packet.ToRobotId}. distance: {dist}, delay: {delayTicks} Ticks, strength: {packet.SendStrength} -> {packet.CalculatedArrivalStrength}");
     }
 
     private void OnTickUpdate(int currentTick)
@@ -54,9 +89,5 @@ public partial class NetworkManager : Node
             }
         }
     }
-
-    public override void _ExitTree()
-	{
-		if (Instance == this) Instance = null;
-	}
+    
 }

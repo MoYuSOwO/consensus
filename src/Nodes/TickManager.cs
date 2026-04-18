@@ -1,13 +1,12 @@
 using Godot;
 using System;
 
-namespace Consensus.Models;
+namespace Consensus.Nodes;
 
 public partial class TickManager : Node
 {
-	public static TickManager? Instance { get; private set; }
-
-	[Export] public float TickInterval = 0.1f;
+	public const int TickPerSecond = 10;
+	public static float TickInterval => 1.0f / TickPerSecond;
 
 	public int CurrentTick { get; private set; } = 0;
     
@@ -24,8 +23,6 @@ public partial class TickManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		Instance = this;
-
 		foreach (var node in GetChildren())
 		{
 			node.QueueFree();
@@ -50,9 +47,5 @@ public partial class TickManager : Node
 	public override void _Process(double delta)
 	{
 	}
-
-	public override void _ExitTree()
-	{
-		if (Instance == this) Instance = null;
-	}
+	
 }
