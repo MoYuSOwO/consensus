@@ -5,6 +5,8 @@ namespace Consensus.Nodes;
 
 public partial class LevelManager : Node
 {
+	[Export] public string LevelPath { get; set; } = "res://Levels/Level_test.tscn";
+
 	private TickManager? _tickManager;
     private NetworkManager? _networkManager;
     private Node? _currentLevel;
@@ -49,7 +51,7 @@ public partial class LevelManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		LoadLevel("res://Scenes/Levels/Level_test.tscn");
+		LoadLevel(LevelPath);
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
