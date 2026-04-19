@@ -9,9 +9,9 @@ namespace Consensus.Utils;
 public enum Direction
 {
     Down = 0,
-    Left = 90,
-    Up = 180,
-    Right = 270
+    Left = 1,
+    Up = 2,
+    Right = 3
 }
 
 public static class DirectionExtensions
@@ -24,18 +24,13 @@ public static class DirectionExtensions
             Direction.Down => new(0, 1),
             Direction.Left => new(-1, 0),
             Direction.Right => new(1, 0),
-            _ => throw new ArgumentException("Why other direction value???"),
+            _ => throw new ArgumentException("Why other direction value???")
         };
     }
 
-    public static int ToDegree(this Direction direction)
+    public static int ToFrameId(this Direction direction)
     {
         return (int)direction;
-    }
-
-    public static float ToRadians(this Direction direction)
-    {
-        return Mathf.DegToRad((float)direction);
     }
 }
 
@@ -110,21 +105,11 @@ public static class AlgorithmUtil
     public const float StrengthDead = 0.1f;
     public const float CurvePower = 1.5f;
 
-    public static int ToTick(float second)
-    {
-        return (int)(second * TickManager.TickPerSecond);
-    }
-
-    public static int ToTick(double second)
-    {
-        return (int)(second * TickManager.TickPerSecond);
-    }
-
 
     public static ValueRange<int> RandomNetworkDelay => new(
-        ToTick(GD.RandRange(MinBaseNetworkDelay, MaxBaseNetworkDelay)),
-        ToTick(MinBaseNetworkDelay),
-        ToTick(MaxBaseNetworkDelay)
+        TickManager.SecondToTick(GD.RandRange(MinBaseNetworkDelay, MaxBaseNetworkDelay)),
+        TickManager.SecondToTick(MinBaseNetworkDelay),
+        TickManager.SecondToTick(MaxBaseNetworkDelay)
     );
 
     public static ValueRange<float> GetLossProb(float strength)
@@ -150,9 +135,9 @@ public static class AlgorithmUtil
     public static ValueRange<int> GetRandomRobotDelay(float minSendDelayTime, float maxSendDelayTime)
     {
         return new(
-            ToTick(GD.RandRange(minSendDelayTime, maxSendDelayTime)),
-            ToTick(minSendDelayTime),
-            ToTick(maxSendDelayTime)
+            TickManager.SecondToTick(GD.RandRange(minSendDelayTime, maxSendDelayTime)),
+            TickManager.SecondToTick(minSendDelayTime),
+            TickManager.SecondToTick(maxSendDelayTime)
         );
     }
 }
