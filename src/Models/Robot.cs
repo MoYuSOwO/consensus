@@ -5,6 +5,7 @@ using Consensus.Utils;
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Consensus.Models;
 
@@ -18,22 +19,12 @@ public partial class Robot : Node2D
     }
     [Export] public float MinSendDelayTime { get; set; } = 1.0f;
     [Export] public float MaxSendDelayTime { get; set; } = 3.0f;
-    public const int GRID_SIZE = 64;
+    
+    private string Caller => $"Robot - {RobotId}";
 
     public Vector2I GridPos { get; protected set; } = new();
     private TileMapLayer? _map;
-    public TileMapLayer MapLayer
-    {
-        get
-        {
-            if (_map == null)
-            {
-                GD.PrintErr($"[Robot - {RobotId}] Robot - MapLayer is not exists.");
-                throw new ArgumentNullException("_map");
-            }
-            return _map;
-        }
-    }
+    public TileMapLayer MapLayer => BasicUtil.Must(_map, Caller);
 
     private readonly Queue<Command> actionQueue = new();
     public bool IsBusy { get; private set; } = false;
@@ -41,18 +32,26 @@ public partial class Robot : Node2D
 
     public Direction FacingDirection { get; private set; } = Direction.Down;
 
-    public NetworkManager Network => GetParent().GetParent().GetParent().GetNode<NetworkManager>("NetworkManager") ?? throw new NotYetInitializationException();
-    public TickManager Ticker => GetParent().GetParent().GetParent().GetNode<TickManager>("TickManager") ?? throw new NotYetInitializationException();
+    private NetworkManager? _network;
+    public NetworkManager Network => BasicUtil.Must(_network, Caller);
+    
+    private TickManager? _ticker;
+    public TickManager Ticker => BasicUtil.Must(_ticker, Caller);
+
+    public Sprite2D Body => GetNode<Sprite2D>("Body");
 
     public override void _Ready()
     {
     }
 
-    public void Init(TileMapLayer map, Vector2I startPos)
+    public void Init(TileMapLayer map, NetworkManager network, TickManager ticker)
     {
         _map = map;
-        GridPos = startPos;
-        Position = _map.MapToLocal(GridPos);
+        _network = network;
+        _ticker = ticker;
+
+        GridPos = MapLayer.LocalToMap(Position);
+        Position = MapLayer.MapToLocal(GridPos);
 
         Network.RegisterRobot(this);
         Ticker.TickUpdate += OnTickUpdate;
@@ -103,7 +102,8 @@ public partial class Robot : Node2D
             actualSteps = i;
         }
 
-        float moveDuration = Mathf.Max(actualSteps * 0.3f, 0.3f);
+        float basicDuration = TickManager.TickToSecond(StepCommand.TickPerStep);
+        float moveDuration = Mathf.Max(actualSteps * basicDuration, basicDuration);
 
         GridPos = lastValidGrid;
         Vector2 targetPixel = MapLayer.MapToLocal(GridPos);
@@ -122,25 +122,26 @@ public partial class Robot : Node2D
         IsBusy = true;
         FacingDirection = dir;
 
-        float currentDeg = Mathf.RadToDeg(Rotation);
-        float targetDeg = dir.ToDegree();
-
-        float diff = targetDeg - currentDeg;
-        diff = (float)Math.IEEERemainder(diff, 360);
-
-        float finalTargetDeg = currentDeg + diff;
+        int targetFrame = dir.ToFrameId();
 
         var tween = GetTree().CreateTween();
-        tween.TweenProperty(this, "rotation_degrees", finalTargetDeg, 0.2f)
-            .SetTrans(Tween.TransitionType.Sine)
-            .SetEase(Tween.EaseType.InOut);
+
+        float duration = TickManager.TickToSecond(RotateCommand.RotateTick);
+        float durationA = duration / 4.0f * 3.0f;
+        float durationB = duration - durationA;
+
+        tween.TweenProperty(this, "scale", new Vector2(1.2f, 0.8f), durationA);
+
+        tween.TweenCallback(Callable.From(() => {
+            Body.Frame = targetFrame;
+        }));
+
+        tween.TweenProperty(this, "scale", Vector2.One, durationB)
+            .SetTrans(Tween.TransitionType.Elastic)
+            .SetEase(Tween.EaseType.Out);
 
         tween.Finished += () => {
-            RotationDegrees = finalTargetDeg % 360;
-            if (RotationDegrees < 0) RotationDegrees += 360;
-            
             IsBusy = false;
-            GD.Print($"[Robot - {RobotId}] Rotated to: {FacingDirection}");
         };
     }
 
