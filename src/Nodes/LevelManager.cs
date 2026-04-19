@@ -1,3 +1,4 @@
+using Consensus.Utils;
 using Godot;
 using System;
 
@@ -7,17 +8,26 @@ public partial class LevelManager : Node
 {
 	[Export] public string LevelPath { get; set; } = "res://Levels/Level_test.tscn";
 
-	private TickManager? _tickManager;
-    private NetworkManager? _networkManager;
+    private static string Caller => $"LevelManager";
+
+	private TickManager? _ticker;
+    public TickManager Ticker => BasicUtil.Must(_ticker, Caller);
+    private NetworkManager? _network;
+    public NetworkManager Network => BasicUtil.Must(_network, Caller);
     private Node? _currentLevel;
+    public Node CurrentLevel => BasicUtil.Must(_currentLevel, Caller);
 
 	public void LoadLevel(string levelPath)
     {
         GD.Print($"[LevelManager] Start to load level: {levelPath}");
 
-        _tickManager?.QueueFree();
-        _networkManager?.QueueFree();
+        _ticker?.QueueFree();
+        _network?.QueueFree();
         _currentLevel?.QueueFree();
+
+        _ticker = null;
+        _network = null;
+        _currentLevel = null;
 
 		foreach (var node in GetChildren()) node.QueueFree();
 
@@ -27,11 +37,13 @@ public partial class LevelManager : Node
 
 	private void InstantiateLevel(string levelPath)
     {
-        _tickManager = new TickManager { Name = "TickManager" };
-        AddChild(_tickManager);
+        _ticker = new TickManager { Name = "TickManager" };
+        AddChild(_ticker);
 
-        _networkManager = new NetworkManager { Name = "NetworkManager" };
-        AddChild(_networkManager);
+        _network = new NetworkManager { Name = "NetworkManager" };
+        AddChild(_network);
+
+        Network.Init(Ticker);
 
         var levelScene = GD.Load<PackedScene>(levelPath);
         if (levelScene == null)
