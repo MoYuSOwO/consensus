@@ -8,10 +8,14 @@ using System.Collections.Generic;
 
 namespace Consensus.Models;
 
-public partial class Robot : Sprite2D
+[GlobalClass]
+public partial class Robot : Node2D
 {
-    [Export] public string RobotId { get; set; } = "Robot_A";
-    [Export] public Texture2D? RobotTexture { get; set; }
+    public string RobotId
+    {
+        get => Name;
+        set => Name = value;
+    }
     [Export] public float MinSendDelayTime { get; set; } = 1.0f;
     [Export] public float MaxSendDelayTime { get; set; } = 3.0f;
     public const int GRID_SIZE = 64;
@@ -38,15 +42,10 @@ public partial class Robot : Sprite2D
     public Direction FacingDirection { get; private set; } = Direction.Down;
 
     public NetworkManager Network => GetParent().GetParent().GetParent().GetNode<NetworkManager>("NetworkManager") ?? throw new NotYetInitializationException();
-    public TickManager Tick => GetParent().GetParent().GetParent().GetNode<TickManager>("TickManager") ?? throw new NotYetInitializationException();
+    public TickManager Ticker => GetParent().GetParent().GetParent().GetNode<TickManager>("TickManager") ?? throw new NotYetInitializationException();
 
     public override void _Ready()
     {
-        if (RobotTexture != null)
-        {
-            Texture = RobotTexture;
-        }
-        Centered = true;
     }
 
     public void Init(TileMapLayer map, Vector2I startPos)
@@ -56,7 +55,7 @@ public partial class Robot : Sprite2D
         Position = _map.MapToLocal(GridPos);
 
         Network.RegisterRobot(this);
-        Tick.TickUpdate += OnTickUpdate;
+        Ticker.TickUpdate += OnTickUpdate;
     }
 
     public void ReceiveCommand(Command cmd)
