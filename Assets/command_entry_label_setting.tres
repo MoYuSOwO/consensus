@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://dikhnf5j6cg4n"]
+
+[ext_resource type="FontFile" uid="uid://ijlatqlr7lbe" path="res://Fonts/Oswald-Regular.ttf" id="1_nalh6"]
+
+[resource]
+font = ExtResource("1_nalh6")
+font_size = 14

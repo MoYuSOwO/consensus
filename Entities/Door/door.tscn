@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cbxahp68hhtk2"]
+
+[ext_resource type="Script" uid="uid://gbituf4i3cih" path="res://src/Models/Entities/Recievers/Door.cs" id="1_iwerq"]
+[ext_resource type="Texture2D" uid="uid://bayrn02h7lghl" path="res://Entities/Door/door.png" id="1_n6865"]
+
+[node name="Door" type="Node2D" unique_id=105814981]
+script = ExtResource("1_iwerq")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1115981204]
+texture = ExtResource("1_n6865")
+vframes = 2

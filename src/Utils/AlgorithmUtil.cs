@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using Consensus.Models;
+using Consensus.Models.Commands;
 using Consensus.Nodes;
 using Godot;
 
@@ -32,6 +33,14 @@ public static class DirectionExtensions
     {
         return (int)direction;
     }
+}
+
+public struct NetworkResult
+{
+    public float Dist { get; set; }
+    public ValueRange<int> DelayTicks { get; set; }
+    public ValueRange<float> Strength { get; set; }
+    public ValueRange<float> LossProb { get; set; }
 }
 
 public readonly struct ValueRange<T> where T : INumber<T>
@@ -94,15 +103,47 @@ public readonly struct ValueRange<T> where T : INumber<T>
             Max = a.Max * b.Max
         };
     }
+
+    public static ValueRange<T> operator +(ValueRange<T> a, T b)
+    {
+        return new()
+        {
+            Value = a.Value + b,
+            Min = a.Min + b,
+            Max = a.Max + b
+        };
+    }
+
+    public static ValueRange<T> operator -(ValueRange<T> a, T b)
+    {
+        return new()
+        {
+            Value = a.Value - b,
+            Min = a.Min - b,
+            Max = a.Max - b
+        };
+    }
+
+    public static ValueRange<T> operator *(ValueRange<T> a, T b)
+    {
+        return new()
+        {
+            Value = a.Value * b,
+            Min = a.Min * b,
+            Max = a.Max * b
+        };
+    }
 }
 
 public static class AlgorithmUtil
 {
+    public const float GridSize = 64.0f;
+
     public const float MinBaseNetworkDelay = 0.3f;
     public const float MaxBaseNetworkDelay = 0.7f;
 
     public const float StrengthPerfect = 4.0f;
-    public const float StrengthDead = 0.1f;
+    public const float StrengthDead = 0.5f;
     public const float CurvePower = 1.5f;
 
 
@@ -139,5 +180,45 @@ public static class AlgorithmUtil
             TickManager.SecondToTick(minSendDelayTime),
             TickManager.SecondToTick(maxSendDelayTime)
         );
+    }
+
+    public static NetworkResult CalculateInf(Robot from, Robot to, Command command)
+    {
+        // distance
+        float dist;
+        
+        // delay
+        ValueRange<int> delayTicks;
+
+        // strength
+        ValueRange<float> strength;
+
+        // loss
+        ValueRange<float> lossProb;
+
+        if (to == from)
+        {
+            dist = 0;
+            delayTicks = RandomNetworkDelay;
+            strength = new(command.SendStrength);
+            lossProb = new(0);
+        }
+        else
+        {
+            dist = from.GlobalPosition.DistanceTo(to.GlobalPosition) / GridSize;
+            delayTicks = RandomNetworkDelay + GetRandomRobotDelay(to);
+            strength = GetDecreaseRatio(dist) * command.SendStrength;
+            var minLoss = GetLossProb(strength.Min);
+            var maxLoss = GetLossProb(strength.Max);
+            lossProb = new(GetLossProb(strength.Value).Value, Mathf.Min(minLoss.Min, maxLoss.Min), Mathf.Max(minLoss.Max, maxLoss.Max));
+        }
+
+        return new()
+        {
+            Dist = dist,
+            DelayTicks = delayTicks,
+            Strength = strength,
+            LossProb = lossProb
+        };
     }
 }
