@@ -36,7 +36,7 @@ public class RelayCommand(string fromRobotId, string toRobotId, int sendTick, fl
         timer.Timeout += () =>
         {
             Cmd.FromRobotId = robot.RobotId;
-            Cmd.SendTick = robot.Tick.CurrentTick;
+            Cmd.SendTick = robot.Ticker.CurrentTick;
             robot.Network.SendPacket(Cmd);
         };
     }
