@@ -29,8 +29,6 @@ public partial class LevelManager : Node
         _network = null;
         _currentLevel = null;
 
-		foreach (var node in GetChildren()) node.QueueFree();
-
         // 等待当前帧结束，确保旧节点移除
         CallDeferred(nameof(InstantiateLevel), levelPath);
     }
