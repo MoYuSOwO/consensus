@@ -1,10 +1,11 @@
+using System.Collections.Immutable;
 using System.Linq;
 using Consensus.Nodes;
 using Godot;
 
 namespace Consensus.Models;
 
-public abstract partial class LevelBase : Node2D
+public abstract partial class LevelBase : Node
 {
     [Export] public float TotalSignalEnergy = 100.0f;
 
@@ -17,6 +18,9 @@ public abstract partial class LevelBase : Node2D
 
     protected TickManager Ticker => GetParent().GetNode<TickManager>("TickManager");
     protected NetworkManager Network => GetParent().GetNode<NetworkManager>("NetworkManager");
+    protected TileMapLayer MapLayer => GetNode<TileMapLayer>("TileMapLayer");
+    protected Camera2D Camera => GetNode<Camera2D>("Camera2D");
+    protected ImmutableDictionary<string, Robot> Robots => GetNode<Node>("Robots").GetChildren().OfType<Robot>().ToImmutableDictionary(k => k.RobotId, v => v);
 
     [Signal]
     public delegate void WinEventHandler();
@@ -28,11 +32,15 @@ public abstract partial class LevelBase : Node2D
     {
         CurrentSignalEnergy = TotalSignalEnergy;
         Ticker.TickUpdate += OnTick;
+        foreach (var robot in Robots.Values)
+        {
+            robot.Init(MapLayer, Network, Ticker);
+        }
         InitLevel();
     }
 
-    protected abstract void InitLevel();
-    protected abstract void OnTick(int tick);
+    protected virtual void InitLevel() {}
+    protected virtual void OnTick(int tick) {}
     protected abstract bool IsGoalMet();
 
     public void CheckStatus()
