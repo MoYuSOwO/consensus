@@ -22,21 +22,26 @@ public partial class NetworkManager : Node
     {
     }
 
+    public void Init(TickManager ticker)
+    {
+        ticker.TickUpdate += OnTickUpdate;
+    }
+
     public void RegisterRobot(Robot robot)
     {
         registry[robot.RobotId] = robot;
     }
 
-    public void SendPacket(Command packet)
+    public void Send(Command command)
     {
-        if (!registry.TryGetValue(packet.FromRobotId, out Robot? from))
+        if (!registry.TryGetValue(command.FromRobotId, out Robot? from))
         {
-            GD.PrintErr($"[NetworkManager] Robot - {packet.FromRobotId} is not exists.");
+            GD.PrintErr($"[NetworkManager] Robot - {command.FromRobotId} is not exists.");
             return;
         }
-        if (!registry.TryGetValue(packet.ToRobotId, out Robot? to))
+        if (!registry.TryGetValue(command.ToRobotId, out Robot? to))
         {
-            GD.PrintErr($"[NetworkManager] Robot - {packet.ToRobotId} is not exists.");
+            GD.PrintErr($"[NetworkManager] Robot - {command.ToRobotId} is not exists.");
             return;
         }
 
@@ -56,24 +61,48 @@ public partial class NetworkManager : Node
         {
             dist = 0;
             delayTicks = AlgorithmUtil.RandomNetworkDelay.Value;
-            strength = packet.SendStrength;
+            strength = command.SendStrength;
             lossProb = 0;
         }
         else
         {
             dist = from.GlobalPosition.DistanceTo(to.GlobalPosition);
             delayTicks = AlgorithmUtil.RandomNetworkDelay.Value + AlgorithmUtil.GetRandomRobotDelay(to).Value;
-            strength = AlgorithmUtil.GetDecreaseRatio(dist).Value * packet.SendStrength;
+            strength = AlgorithmUtil.GetDecreaseRatio(dist).Value * command.SendStrength;
             lossProb = AlgorithmUtil.GetLossProb(strength).Value;
         }
 
-        packet.CalculatedArrivalTick = packet.SendTick + delayTicks;
-        packet.CalculatedArrivalStrength = strength;
-        packet.CalculatedArrivalLossRatio = lossProb;
+        command.CalculatedArrivalTick = command.SendTick + delayTicks;
+        command.CalculatedArrivalStrength = strength;
+        command.CalculatedArrivalLossRatio = lossProb;
         
-        inFlightPackets.Add(packet);
+        inFlightPackets.Add(command);
 
-        GD.Print($"[NetworkManager] {packet.FromRobotId} -> {packet.ToRobotId}. distance: {dist}, delay: {delayTicks} Ticks, strength: {packet.SendStrength} -> {packet.CalculatedArrivalStrength}");
+        GD.Print($"[NetworkManager] {command.FromRobotId} -> {command.ToRobotId}. distance: {dist}, delay: {delayTicks} Ticks, strength: {command.SendStrength} -> {command.CalculatedArrivalStrength}");
+    }
+
+    public void SendAll(IEnumerable<Command> commands)
+    {
+        foreach (var command in commands)
+        {
+            Send(command);
+        }
+    }
+
+    public void SendAll(IList<Command> commands)
+    {
+        foreach (var command in commands)
+        {
+            Send(command);
+        }
+    }
+
+    public void SendAll(params Command[] commands)
+    {
+        foreach (var command in commands)
+        {
+            Send(command);
+        }
     }
 
     private void OnTickUpdate(int currentTick)
@@ -89,5 +118,5 @@ public partial class NetworkManager : Node
             }
         }
     }
-    
+
 }
