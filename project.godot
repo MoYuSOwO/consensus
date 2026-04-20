@@ -13,7 +13,7 @@ config_version=5
 config/name="Consensus"
 run/main_scene="uid://bldysmtpqv6ce"
 config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="uid://dj303vr4sdfln"
 
 [display]
 
