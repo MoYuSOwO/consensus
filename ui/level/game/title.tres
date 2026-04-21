@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://cs78ovwadkg3p"]
+
+[ext_resource type="FontFile" uid="uid://bdsfhd3ybvu0m" path="res://assets/fonts/Rajdhani-SemiBold.ttf" id="1_d2msb"]
+
+[resource]
+font = ExtResource("1_d2msb")
+font_size = 24

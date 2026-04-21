@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dni0o1dy8ty3p"]
+
+[ext_resource type="Script" uid="uid://d18ue2a46yv7w" path="res://entities/grid/pressure_plate/pressure_plate.gd" id="1_igqiv"]
+[ext_resource type="Texture2D" uid="uid://c6hmh5k7jhfw1" path="res://entities/grid/pressure_plate/pressure_plate.png" id="2_u7sli"]
+
+[node name="PressurePlate" type="Node2D" unique_id=536176263]
+script = ExtResource("1_igqiv")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=11736158]
+texture = ExtResource("2_u7sli")

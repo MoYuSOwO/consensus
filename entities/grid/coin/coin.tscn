@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cfjhn50qifpyq"]
+
+[ext_resource type="Script" uid="uid://b4ncieyf5mkg7" path="res://entities/grid/coin/coin.gd" id="1_i5v3m"]
+[ext_resource type="Texture2D" uid="uid://m4mj1jd77nhe" path="res://entities/grid/coin/coin.png" id="2_corbv"]
+
+[node name="Coin" type="Node2D" unique_id=1517671277]
+script = ExtResource("1_i5v3m")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1219854337]
+texture = ExtResource("2_corbv")

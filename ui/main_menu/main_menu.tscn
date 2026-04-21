@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bldysmtpqv6ce"]
+
+[ext_resource type="Script" uid="uid://dl2yhv3slo2ph" path="res://ui/main_menu/main_menu.gd" id="1_3es34"]
+[ext_resource type="PackedScene" uid="uid://cs2mfx2h1hihs" path="res://levels/base/level_root.tscn" id="2_8md67"]
+[ext_resource type="LabelSettings" uid="uid://nptq0obxtegk" path="res://ui/main_menu/main_title_label_setting.tres" id="2_i5wg5"]
+[ext_resource type="Theme" uid="uid://dks1oja7f37h2" path="res://ui/main_menu/main_title_button_container_theme.tres" id="3_3c04x"]
+[ext_resource type="Theme" uid="uid://byp5l4ylrpuas" path="res://ui/main_menu/level_selection_theme.tres" id="4_joh67"]
+
+[node name="MainMenu" type="CanvasLayer" unique_id=1159116873]
+script = ExtResource("1_3es34")
+level_scene = ExtResource("2_8md67")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1894768707]
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(29.039997, 16.44)
+color = Color(0, 0, 0, 1)
+
+[node name="TitleContainer" type="VBoxContainer" parent="." unique_id=1748136156]
+offset_left = 284.0
+offset_top = 95.0
+offset_right = 892.0
+offset_bottom = 237.0
+
+[node name="TitleLabel" type="Label" parent="TitleContainer" unique_id=1936150451]
+layout_mode = 2
+text = "CONSENSUS"
+label_settings = ExtResource("2_i5wg5")
+
+[node name="ButtonContainer" type="VBoxContainer" parent="." unique_id=609138130]
+offset_left = 492.0
+offset_top = 302.0
+offset_right = 657.0
+offset_bottom = 462.0
+theme = ExtResource("3_3c04x")
+
+[node name="StartButton" type="Button" parent="ButtonContainer" unique_id=1960077083]
+layout_mode = 2
+text = "Start"
+
+[node name="QuitButton" type="Button" parent="ButtonContainer" unique_id=521621588]
+layout_mode = 2
+text = "Quit"
+
+[node name="LevelSelectPanel" type="PanelContainer" parent="." unique_id=590416201]
+offset_left = 196.0
+offset_top = 249.0
+offset_right = 996.0
+offset_bottom = 549.0
+theme = ExtResource("4_joh67")
+
+[node name="VBox" type="VBoxContainer" parent="LevelSelectPanel" unique_id=14889743]
+layout_mode = 2
+
+[node name="SubTitle" type="Label" parent="LevelSelectPanel/VBox" unique_id=1517758880]
+layout_mode = 2
+text = "Select Sector"
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="LevelSelectPanel/VBox" unique_id=985968973]
+layout_mode = 2
+columns = 2
+
+[node name="BackButton" type="Button" parent="LevelSelectPanel/VBox" unique_id=960954500]
+layout_mode = 2

@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://cs2mfx2h1hihs"]
-
-[ext_resource type="Script" uid="uid://b4olvi22dacnc" path="res://src/Nodes/LevelManager.cs" id="1_qdcau"]
-
-[node name="LevelRoot" type="Node" unique_id=1020988791]
-script = ExtResource("1_qdcau")

@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://nptq0obxtegk"]
+
+[ext_resource type="FontFile" uid="uid://b32rfd6bw2hfq" path="res://assets/fonts/Share-TechMono.ttf" id="1_rki2c"]
+
+[resource]
+font = ExtResource("1_rki2c")
+font_size = 125

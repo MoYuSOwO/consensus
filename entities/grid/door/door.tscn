@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cvq5ta4815rkb"]
+
+[ext_resource type="Script" uid="uid://dlcwwml6dmgxx" path="res://entities/grid/door/door.gd" id="1_fvbxo"]
+[ext_resource type="Texture2D" uid="uid://bx6441awh4kmy" path="res://entities/grid/door/door.png" id="2_enmar"]
+
+[node name="Door" type="Node2D" unique_id=105814981]
+script = ExtResource("1_fvbxo")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1115981204]
+texture = ExtResource("2_enmar")
+vframes = 2

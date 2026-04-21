@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" format=3 uid="uid://dlqm1le26gvkn"]
+
+[ext_resource type="FontFile" uid="uid://6hpnamao43jm" path="res://assets/fonts/Changa-Regular.ttf" id="1_sx2ss"]
+
+[resource]
+font = ExtResource("1_sx2ss")
+font_size = 10

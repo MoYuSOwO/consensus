@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://bslcm0pwncwo0"]
+
+[ext_resource type="FontFile" uid="uid://dwrdosxkg8x7s" path="res://assets/fonts/FiraCode-Medium.ttf" id="1_ekfnu"]
+
+[resource]
+default_font = ExtResource("1_ekfnu")
+default_font_size = 14

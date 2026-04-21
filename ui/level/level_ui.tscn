@@ -1,0 +1,308 @@
+[gd_scene format=3 uid="uid://dmiiqytxkfolm"]
+
+[ext_resource type="Script" uid="uid://v2t8obbrpexh" path="res://ui/level/game/level_ui.gd" id="1_783ux"]
+[ext_resource type="PackedScene" path="res://ui/level/game/command_entry.tscn" id="2_hild0"]
+[ext_resource type="Theme" uid="uid://csqiq5jn7mtsj" path="res://assets/themes/global_theme.tres" id="3_85ayt"]
+[ext_resource type="Script" uid="uid://bnsuy3dbod5ga" path="res://ui/level/game/command_inspector.gd" id="3_md35f"]
+[ext_resource type="LabelSettings" uid="uid://cs78ovwadkg3p" path="res://ui/level/game/title.tres" id="4_85ayt"]
+[ext_resource type="LabelSettings" uid="uid://dikhnf5j6cg4n" path="res://assets/themes/command_entry_label_setting.tres" id="5_7uhi3"]
+[ext_resource type="FontFile" uid="uid://bdsfhd3ybvu0m" path="res://assets/fonts/Rajdhani-SemiBold.ttf" id="7_pxu4k"]
+[ext_resource type="Theme" uid="uid://bslcm0pwncwo0" path="res://ui/level/game/terminal.tres" id="8_edrjs"]
+[ext_resource type="Script" uid="uid://b2olbxkhpghtl" path="res://ui/level/overlay/game_overlay.gd" id="9_x4dsl"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_x4dsl"]
+font_size = 12
+font_color = Color(0.69480914, 0.6948092, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wff7q"]
+font = ExtResource("7_pxu4k")
+
+[sub_resource type="LabelSettings" id="LabelSettings_edrjs"]
+font = ExtResource("7_pxu4k")
+font_size = 20
+
+[node name="LevelUI" type="CanvasLayer" unique_id=1834599467]
+script = ExtResource("1_783ux")
+command_entry_scene = ExtResource("2_hild0")
+
+[node name="GameOverlay" type="CanvasLayer" parent="." unique_id=868439203]
+process_mode = 3
+layer = 10
+script = ExtResource("9_x4dsl")
+
+[node name="PauseButton" type="Button" parent="GameOverlay" unique_id=980102175]
+process_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -55.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Pause"
+
+[node name="BackgroundDim" type="ColorRect" parent="GameOverlay" unique_id=384979109]
+offset_left = 362.0
+offset_top = 216.0
+offset_right = 853.0
+offset_bottom = 450.0
+color = Color(0, 0, 0, 0.8392157)
+
+[node name="CenterContainer" type="CenterContainer" parent="GameOverlay/BackgroundDim" unique_id=668439782]
+layout_mode = 0
+offset_right = 489.0
+offset_bottom = 231.0
+
+[node name="VBox" type="VBoxContainer" parent="GameOverlay/BackgroundDim/CenterContainer" unique_id=1132309912]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="GameOverlay/BackgroundDim/CenterContainer/VBox" unique_id=3174840]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="GameOverlay/BackgroundDim/CenterContainer/VBox" unique_id=1775351472]
+layout_mode = 2
+
+[node name="RetryBtn" type="Button" parent="GameOverlay/BackgroundDim/CenterContainer/VBox" unique_id=1382755329]
+layout_mode = 2
+text = "Retry"
+
+[node name="MenuBtn" type="Button" parent="GameOverlay/BackgroundDim/CenterContainer/VBox" unique_id=1368775954]
+layout_mode = 2
+text = "Menu"
+
+[node name="ContinueBtn" type="Button" parent="GameOverlay/BackgroundDim/CenterContainer/VBox" unique_id=889698172]
+layout_mode = 2
+text = "Continue"
+
+[node name="MainContainer" type="HBoxContainer" parent="." unique_id=1603872835]
+custom_minimum_size = Vector2(0, 600)
+offset_right = 377.0
+offset_bottom = 379.0
+theme = ExtResource("3_85ayt")
+
+[node name="EditorPanel" type="PanelContainer" parent="MainContainer" unique_id=537747043]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="MainContainer/EditorPanel" unique_id=344340611]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MainContainer/EditorPanel/VBox" unique_id=286335548]
+layout_mode = 2
+text = "Command Console"
+label_settings = ExtResource("4_85ayt")
+horizontal_alignment = 1
+
+[node name="WarningLabel" type="Label" parent="MainContainer/EditorPanel/VBox" unique_id=1341356745]
+layout_mode = 2
+text = "WARNING: ARRIVAL DATA IS STATIC ESTIMATE ONLY"
+label_settings = SubResource("LabelSettings_x4dsl")
+horizontal_alignment = 1
+
+[node name="StrengthLabel" type="Label" parent="MainContainer/EditorPanel/VBox" unique_id=1953038117]
+layout_mode = 2
+text = "Strength: 100 / 100"
+label_settings = SubResource("LabelSettings_wff7q")
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="MainContainer/EditorPanel/VBox" unique_id=1403866016]
+layout_mode = 2
+
+[node name="HBox" type="HBoxContainer" parent="MainContainer/EditorPanel/VBox/HBox" unique_id=1340081422]
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+
+[node name="IndexCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=797053371]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Index"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="SendTimeCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=814223513]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+text = "Send Time"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="ArriveTimeCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=1746377798]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+text = "Arrive Time"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="TargetCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=1871162596]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "Target Robot"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="ActionCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=1838879577]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+text = "Action"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="SendStrengthCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=1170512352]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.2
+text = "Strength"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="ArriveStrengthCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=1449121754]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+text = "Arrive Strength"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="LossProbCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=344762728]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+text = "Loss Probability"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="ExtraParamsCol" type="Label" parent="MainContainer/EditorPanel/VBox/HBox/HBox" unique_id=1122744896]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
+text = "Extra Params"
+label_settings = ExtResource("5_7uhi3")
+horizontal_alignment = 1
+text_overrun_behavior = 1
+
+[node name="CommandList" type="ScrollContainer" parent="MainContainer/EditorPanel/VBox" unique_id=797581724]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ListContent" type="VBoxContainer" parent="MainContainer/EditorPanel/VBox/CommandList" unique_id=1376407396]
+layout_mode = 2
+
+[node name="AddButton" type="MenuButton" parent="MainContainer/EditorPanel/VBox" unique_id=1664445579]
+layout_mode = 2
+text = "Add"
+
+[node name="ExecuteButton" type="Button" parent="MainContainer/EditorPanel/VBox" unique_id=496204984]
+layout_mode = 2
+text = "Execute"
+
+[node name="CommandInspector" type="PanelContainer" parent="MainContainer/EditorPanel/VBox" unique_id=1180407585]
+layout_mode = 2
+script = ExtResource("3_md35f")
+
+[node name="VBox" type="VBoxContainer" parent="MainContainer/EditorPanel/VBox/CommandInspector" unique_id=1240106150]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox" unique_id=1887541357]
+layout_mode = 2
+text = "Edit Command"
+label_settings = SubResource("LabelSettings_edrjs")
+horizontal_alignment = 1
+
+[node name="BasicParamsContainer" type="HBoxContainer" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox" unique_id=929568367]
+layout_mode = 2
+
+[node name="SendTimeContainer" type="GridContainer" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer" unique_id=1235859398]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer/SendTimeContainer" unique_id=1388117062]
+layout_mode = 2
+text = "Send Time"
+
+[node name="SendTime" type="SpinBox" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer/SendTimeContainer" unique_id=647494426]
+layout_mode = 2
+min_value = 0.1
+step = 0.1
+value = 0.1
+alignment = 1
+suffix = "s"
+
+[node name="TargetContainer" type="GridContainer" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer" unique_id=1487846415]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer/TargetContainer" unique_id=106611362]
+layout_mode = 2
+text = "Target Robot"
+
+[node name="TargetRobot" type="OptionButton" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer/TargetContainer" unique_id=840494039]
+layout_mode = 2
+
+[node name="StrengthContainer" type="GridContainer" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer" unique_id=386792904]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer/StrengthContainer" unique_id=369208324]
+layout_mode = 2
+text = "Strength"
+
+[node name="Strength" type="SpinBox" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox/BasicParamsContainer/StrengthContainer" unique_id=1976734598]
+layout_mode = 2
+min_value = 0.5
+step = 0.1
+value = 0.5
+
+[node name="ExtraParamsContainer" type="VBoxContainer" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox" unique_id=1915314149]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="MainContainer/EditorPanel/VBox/CommandInspector/VBox" unique_id=432137975]
+layout_mode = 2
+text = "Save"
+
+[node name="ConsolePanel" type="PanelContainer" parent="MainContainer" unique_id=846924565]
+layout_mode = 2
+theme = ExtResource("8_edrjs")
+
+[node name="VBox" type="VBoxContainer" parent="MainContainer/ConsolePanel" unique_id=98731756]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MainContainer/ConsolePanel/VBox" unique_id=75675215]
+layout_mode = 2
+text = "> _SYSTEM TERMINAL_"
+
+[node name="LogViewer" type="RichTextLabel" parent="MainContainer/ConsolePanel/VBox" unique_id=1188521472]
+custom_minimum_size = Vector2(800, 550)
+layout_mode = 2
+bbcode_enabled = true
+
+[node name="RestartButton" type="Button" parent="MainContainer/ConsolePanel/VBox" unique_id=450276826]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Restart"
+
+[node name="Workspace" type="Control" parent="MainContainer" unique_id=1711115316]
+layout_mode = 2
+
+[node name="HideButton" type="Button" parent="." unique_id=485141132]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 35.0
+grow_vertical = 0
+text = "Hide Sidebar"

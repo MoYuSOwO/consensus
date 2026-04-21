@@ -10,18 +10,14 @@ config_version=5
 
 [application]
 
-config/name="Consensus"
+config/name="ConsensusWeb"
 run/main_scene="uid://bldysmtpqv6ce"
-config/features=PackedStringArray("4.6", "C#", "GL Compatibility")
-config/icon="uid://dj303vr4sdfln"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+config/icon="uid://c0bw23k2edftg"
 
 [display]
 
 window/stretch/mode="canvas_items"
-
-[dotnet]
-
-project/assembly_name="Consensus"
 
 [physics]
 
